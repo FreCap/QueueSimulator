@@ -70,6 +70,17 @@ void queue::input() {
   NRUNmin = read_int("Simulation number of RUNs", 5, 2, 100);
 }
 
+void queue::input(initParameters parameters) {
+  traffic_model = parameters.traffic_model;
+  load = parameters.load;
+  service_model = parameters.service_model;
+  duration = parameters.duration;
+  inter = duration / load;
+  Trslen = parameters.Trslen;
+  Runlen = parameters.Runlen;
+  NRUNmin = parameters.NRUNmin;
+}
+
 void queue::inputStatic() {
   printf("MODEL PARAMETERS:\n\n");
   printf("\n Arrivals model:\n");
@@ -77,16 +88,24 @@ void queue::inputStatic() {
   traffic_model = 1;
   load = 0.4; // 0.4, 0.01, 0.999
   service_model = 1;
-  duration = 0.4;// 0.4, 0.01, 100);
+  duration = 0.4;// 0.4, 0.01, 100
   inter = duration / load;
-  Trslen = 100; //, 100, 0.01, 10000);
-  Runlen = 100; //, 100, 0.01, 10000);
-  NRUNmin = 5;// 5, 2, 100);
+  Trslen = 100; //, 100, 0.01, 10000
+  Runlen = 100; //, 100, 0.01, 10000
+  NRUNmin = 5;// 5, 2, 100
 }
 
 
 void queue::init() {
   input();
+  event *Ev;
+  Ev = new arrival(0.0, buf);
+  cal->put(Ev);
+  buf->status = 0;
+}
+
+void queue::init(initParameters parameters) {
+  input(parameters);
   event *Ev;
   Ev = new arrival(0.0, buf);
   cal->put(Ev);
@@ -177,6 +196,6 @@ void queue::update_stats() {
   *delay += buf->tot_delay / buf->tot_packs;
 }
 
-int queue::isConfSatisf(double perc) {
+int queue::is_confidence_satisfied(double perc) {
   return delay->isconfsatisfied(10, .95);
 }

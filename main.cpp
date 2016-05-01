@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[]) {
 
-  simulator *eval;
+  queue *eval;
 
   printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
   printf("**********************************************************\n\n");
@@ -15,7 +15,18 @@ int main(int argc, char *argv[]) {
   printf("**********************************************************\n\n");
 
   eval = new queue(argc, argv);
-  eval->init();
+
+  initParameters parameters = {
+      .traffic_model = 1,
+      .load = 0.4,
+      .service_model = 1,
+      .duration = 0.4,
+      .Trslen = 100,
+      .Runlen = 100,
+      .NRUNmin = 5
+  };
+
+  eval->init(parameters);
   eval->run();
   eval->results();
   delete (eval);
