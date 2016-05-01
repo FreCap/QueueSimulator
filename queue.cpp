@@ -14,9 +14,25 @@
 calendar *cal;        // events calendar
 double inter;
 double duration;
+
+/**
+ * Number of transition
+ */
 double Trslen;
+
+/**
+ * Length of each run
+ */
 double Runlen;
+
+/**
+ * Number of run
+ */
 int NRUNmin;
+
+/**
+ * @deprecated
+ */
 int NRUNmax;
 
 
@@ -33,6 +49,9 @@ queue::~queue() {
 }
 
 void queue::input() {
+  inputStatic();
+  return;
+
   printf("MODEL PARAMETERS:\n\n");
   printf("\n Arrivals model:\n");
   printf("1 - Poisson:>\n");
@@ -45,10 +64,24 @@ void queue::input() {
   inter = duration / load;
   printf("SIMULATION PARAMETERS:\n\n");
   Trslen = read_double("Simulation transient len (s)", 100, 0.01, 10000);
-  Trslen = Trslen;
+
   Runlen = read_double("Simulation RUN len (s)", 100, 0.01, 10000);
-  Runlen = Runlen;
+
   NRUNmin = read_int("Simulation number of RUNs", 5, 2, 100);
+}
+
+void queue::inputStatic() {
+  printf("MODEL PARAMETERS:\n\n");
+  printf("\n Arrivals model:\n");
+
+  traffic_model = 1;
+  load = 0.4; // 0.4, 0.01, 0.999
+  service_model = 1;
+  duration = 0.4;// 0.4, 0.01, 100);
+  inter = duration / load;
+  Trslen = 100; //, 100, 0.01, 10000);
+  Runlen = 100; //, 100, 0.01, 10000);
+  NRUNmin = 5;// 5, 2, 100);
 }
 
 
@@ -144,6 +177,6 @@ void queue::update_stats() {
   *delay += buf->tot_delay / buf->tot_packs;
 }
 
-int queue::isconfsatisf(double perc) {
+int queue::isConfSatisf(double perc) {
   return delay->isconfsatisfied(10, .95);
 }

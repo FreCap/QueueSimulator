@@ -15,10 +15,26 @@ class queue : public simulator {
 
   virtual void input(void);
 
+  virtual void inputStatic(void);
+
   buffer *buf;            // queue buffer
+
+  /**
+   * 1 = poisson
+   */
   int traffic_model;
+
+  /**
+   * in Erlang
+   * avg 0.4, min 0.01, max 0.999
+   */
   double load;
+
+  /**
+   * 1 = poisson
+   */
   int service_model;
+
   // counters
   double packets;
   double tot_delay;
@@ -44,7 +60,7 @@ private:
 
   virtual void results(void);
 
-  virtual int isconfsatisf(double perc);
+  virtual int isConfSatisf(double perc);
 };
 
 #endif

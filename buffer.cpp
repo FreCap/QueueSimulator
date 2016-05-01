@@ -12,7 +12,7 @@ buffer::buffer() {
   tot_packs = 0.0;
 }
 
-void    buffer::insert(packet *pack) {
+void buffer::insert(packet *pack) {
   if (head == NULL) {
     head = pack;
     last = pack;
